@@ -1,68 +1,59 @@
-app Cookbook
+application-defaults Cookbook
 ============
-TODO: Enter the cookbook description here.
 
-e.g.
-This cookbook makes your favorite breakfast sandwich.
-
-Requirements
-------------
-TODO: List your cookbook requirements. Be sure to include any requirements this cookbook has on platforms, libraries, other cookbooks, packages, operating systems, etc.
-
-e.g.
-#### packages
-- `toaster` - app needs toaster to brown your bagel.
+This cookbook helps you setup the general information and resource helpers to deploy a rails application.
+- Some related cookbooks uses it:
+  + [application-nginx](https://github.com/phanviet/chef-application-nginx.git)
+  + [application-monit](https://github.com/phanviet/chef-application-monit.git)
+  + [application-unicorn](https://github.com/phanviet/chef-application-unicorn.git)
+  + [application-puma](https://github.com/phanviet/chef-application-puma.git)
+  + [application-sidekiq](https://github.com/phanviet/chef-application-sidekiq.git)
+  + [application-solr](https://github.com/phanviet/chef-application-solr.git)
 
 Attributes
 ----------
-TODO: List your cookbook attributes here.
+- Require:
+  + `node[:app][:domain]`: rails application domain
+  + `node[:app][:user]`: app owner
+  + `node[:app][:group]`: app group
+- Optional:
+  + Reading `attributes` folder in cookbook to know more details
 
-e.g.
-#### app::default
-<table>
-  <tr>
-    <th>Key</th>
-    <th>Type</th>
-    <th>Description</th>
-    <th>Default</th>
-  </tr>
-  <tr>
-    <td><tt>['app']['bacon']</tt></td>
-    <td>Boolean</td>
-    <td>whether to include bacon</td>
-    <td><tt>true</tt></td>
-  </tr>
-</table>
-
-Usage
+Resources
 -----
-#### app::default
-TODO: Write usage instructions for each cookbook.
+#### upload_template
+Upload templates. The template files should be in `templates/` folder
 
-e.g.
-Just include `app` in your node's `run_list`:
+Example:
 
-```json
-{
-  "name":"my_node",
-  "run_list": [
-    "recipe[app]"
-  ]
-}
+```ruby
+upload_template "/path/destination/file.yml" do
+    source 'file.yml.erb'
+end
 ```
 
-Contributing
-------------
-TODO: (optional) If this is a public cookbook, detail the process for contributing. If this is a private cookbook, remove this section.
+#### upload_file
+Upload static files. The static files should be in `files/` folder
 
-e.g.
-1. Fork the repository on Github
-2. Create a named feature branch (like `add_component_x`)
-3. Write your change
-4. Write tests for your change (if applicable)
-5. Run the tests, ensuring they all pass
-6. Submit a Pull Request using Github
+Example:
 
-License and Authors
--------------------
-Authors: TODO: List authors
+```ruby
+upload_file "name" do
+    source "/path/source/file.xml"
+    path "/path/destination/file.xml"
+end
+```
+
+#### ruby_exec
+Execute command with ruby wrapper
+
+Example:
+
+```ruby
+ruby_exec 'Bundle install' do
+    dir '/directory'
+    code %(
+        bundle install
+    )
+end
+```
